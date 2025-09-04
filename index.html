@@ -29,10 +29,10 @@
             width: 100%;
         }
         .book {
-            width: 600px;
-            height: 800px;
+            width: 300px;
+            height: 400px;
             position: relative;
-            perspective: 1000px;
+            perspective: 1200px; /* Tambah perspektif lebih dalam */
             cursor: pointer;
             z-index: 10;
             -webkit-tap-highlight-color: transparent;
@@ -46,11 +46,12 @@
             top: 0;
             left: 0;
             transform-origin: left;
-            transition: transform 0.7s cubic-bezier(0.25, 0.1, 0.25, 1); /* Animasi lebih realistis */
+            transition: transform 1.5s cubic-bezier(0.25, 0.1, 0.25, 1), box-shadow 1.5s ease; /* Lambat dan smooth */
             backface-visibility: hidden;
             pointer-events: auto;
             -webkit-tap-highlight-color: transparent;
             outline: none;
+            image-rendering: crisp-edges;
         }
         .book-cover {
             background-image: url('assets/tampilan.webp');
@@ -65,7 +66,6 @@
             background-position: center;
             border: 1px solid #ccc;
             box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2);
-            transition: transform 0.7s cubic-bezier(0.25, 0.1, 0.25, 1), box-shadow 0.7s ease; /* Tambah transisi bayangan */
         }
         .left-page {
             background-size: cover;
@@ -95,17 +95,17 @@
         .left-page-8 { background-image: url('assets/kosong8.webp'); }
         .left-page-9 { background-image: url('assets/kosong9.webp'); }
         .left-page-10 { background-image: url('assets/kosong10.webp'); }
-        .open .book-cover { transform: rotateY(-180deg); }
-        .flip-1 .page-1 { transform: rotateY(-180deg); box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.3); /* Bayangan berubah saat flip */ }
-        .flip-2 .page-2 { transform: rotateY(-180deg); box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.3); }
-        .flip-3 .page-3 { transform: rotateY(-180deg); box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.3); }
-        .flip-4 .page-4 { transform: rotateY(-180deg); box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.3); }
-        .flip-5 .page-5 { transform: rotateY(-180deg); box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.3); }
-        .flip-6 .page-6 { transform: rotateY(-180deg); box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.3); }
-        .flip-7 .page-7 { transform: rotateY(-180deg); box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.3); }
-        .flip-8 .page-8 { transform: rotateY(-180deg); box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.3); }
-        .flip-9 .page-9 { transform: rotateY(-180deg); box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.3); }
-        .flip-10 .page-10 { transform: rotateY(-180deg); box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.3); }
+        .open .book-cover { transform: rotateY(-180deg); box-shadow: -5px 5px 15px rgba(0, 0, 0, 0.4); }
+        .flip-1 .page-1 { transform: rotateY(-180deg); box-shadow: -5px 5px 15px rgba(0, 0, 0, 0.4); }
+        .flip-2 .page-2 { transform: rotateY(-180deg); box-shadow: -5px 5px 15px rgba(0, 0, 0, 0.4); }
+        .flip-3 .page-3 { transform: rotateY(-180deg); box-shadow: -5px 5px 15px rgba(0, 0, 0, 0.4); }
+        .flip-4 .page-4 { transform: rotateY(-180deg); box-shadow: -5px 5px 15px rgba(0, 0, 0, 0.4); }
+        .flip-5 .page-5 { transform: rotateY(-180deg); box-shadow: -5px 5px 15px rgba(0, 0, 0, 0.4); }
+        .flip-6 .page-6 { transform: rotateY(-180deg); box-shadow: -5px 5px 15px rgba(0, 0, 0, 0.4); }
+        .flip-7 .page-7 { transform: rotateY(-180deg); box-shadow: -5px 5px 15px rgba(0, 0, 0, 0.4); }
+        .flip-8 .page-8 { transform: rotateY(-180deg); box-shadow: -5px 5px 15px rgba(0, 0, 0, 0.4); }
+        .flip-9 .page-9 { transform: rotateY(-180deg); box-shadow: -5px 5px 15px rgba(0, 0, 0, 0.4); }
+        .flip-10 .page-10 { transform: rotateY(-180deg); box-shadow: -5px 5px 15px rgba(0, 0, 0, 0.4); }
         .reset .book-cover, 
         .reset .page-1, 
         .reset .page-2, 
@@ -118,7 +118,7 @@
         .reset .page-9, 
         .reset .page-10 {
             transform: rotateY(0deg);
-            box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2); /* Kembalikan bayangan default */
+            box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2);
         }
         .table-container-top {
             position: fixed;
@@ -139,7 +139,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            width: 600px;
+            width: 300px;
         }
         .button-icon {
             width: 40px;
@@ -216,25 +216,14 @@
         .popup td:hover {
             background-color: #ff8a75;
         }
-
-        /* Media Queries untuk Responsif di HP */
-        @media (max-width: 768px) {
+        /* Media Queries untuk Desktop */
+        @media (min-width: 769px) {
             .book {
-                width: 300px;
-                height: 400px;
+                width: 600px;
+                height: 800px;
             }
             .table-top {
-                width: 300px;
-            }
-        }
-
-        @media (max-height: 600px) {
-            .book {
-                width: 200px;
-                height: 266px; /* Proporsi 3:4 tetap */
-            }
-            .table-top {
-                width: 200px;
+                width: 600px;
             }
         }
     </style>
@@ -336,7 +325,7 @@
             setTimeout(() => {
                 book.classList.remove('reset');
                 currentPage = 0;
-            }, 700);
+            }, 1500); /* Sesuaikan dengan durasi transition */
         }
 
         function showPopup() {
