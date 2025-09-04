@@ -33,8 +33,11 @@
             height: 400px;
             position: relative;
             perspective: 1000px;
-            cursor: pointer; /* Pastikan kursor menunjukkan clickable */
+            cursor: pointer;
             z-index: 10;
+            -webkit-tap-highlight-color: transparent; /* Hilangkan overlay biru di mobile */
+            -webkit-touch-callout: none; /* Hilangkan callout di iOS */
+            outline: none; /* Hilangkan outline fokus */
         }
         .book-cover, .page {
             width: 100%;
@@ -45,7 +48,9 @@
             transform-origin: left;
             transition: transform 0.7s ease-in-out;
             backface-visibility: hidden;
-            pointer-events: auto; /* Pastikan semua elemen bisa diklik */
+            pointer-events: auto;
+            -webkit-tap-highlight-color: transparent; /* Hilangkan overlay biru */
+            outline: none; /* Hilangkan outline fokus */
         }
         .book-cover {
             background-image: url('assets/tampilan.png');
@@ -124,6 +129,8 @@
             border-radius: 50%;
             cursor: pointer;
             transition: transform 0.3s ease;
+            -webkit-tap-highlight-color: transparent; /* Hilangkan overlay biru */
+            outline: none; /* Hilangkan outline fokus */
         }
         .button-icon:hover {
             transform: scale(1.1);
@@ -142,6 +149,8 @@
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
             text-align: center;
             z-index: 100;
+            -webkit-tap-highlight-color: transparent; /* Hilangkan overlay biru */
+            outline: none; /* Hilangkan outline fokus */
         }
         .popup.show {
             display: block;
@@ -180,6 +189,8 @@
             cursor: pointer;
             transition: background-color 0.3s ease;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            -webkit-tap-highlight-color: transparent; /* Hilangkan overlay biru */
+            outline: none; /* Hilangkan outline fokus */
         }
         .popup td:hover {
             background-color: #ff8a75;
@@ -286,4 +297,4 @@
         }
     </script>
 </body>
-    </html>
+</html>
