@@ -18,6 +18,7 @@
             overflow: hidden;
             font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
             position: relative;
+            flex-direction: column; /* Tambah ini biar buku dan tabel stack vertikal */
         }
         .book-container {
             position: relative;
@@ -32,7 +33,7 @@
             width: 300px;
             height: 400px;
             position: relative;
-            perspective: 1200px; /* Tambah perspektif lebih dalam */
+            perspective: 1200px;
             cursor: pointer;
             z-index: 10;
             -webkit-tap-highlight-color: transparent;
@@ -46,7 +47,7 @@
             top: 0;
             left: 0;
             transform-origin: left;
-            transition: transform 1.5s cubic-bezier(0.25, 0.1, 0.25, 1), box-shadow 1.5s ease; /* Lambat dan smooth */
+            transition: transform 1.5s cubic-bezier(0.25, 0.1, 0.25, 1), box-shadow 1.5s ease;
             backface-visibility: hidden;
             pointer-events: auto;
             -webkit-tap-highlight-color: transparent;
@@ -72,8 +73,8 @@
             background-position: center;
             border: 1px solid #ccc;
             box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.2);
-            z-index: 0; /* Di belakang halaman kanan */
-            transform: rotateY(0deg); /* Selalu terbuka */
+            z-index: 0;
+            transform: rotateY(0deg);
         }
         .page-1 { background-image: url('assets/1.webp'); z-index: 10; }
         .page-2 { background-image: url('assets/2.webp'); z-index: 9; }
@@ -120,37 +121,38 @@
             transform: rotateY(0deg);
             box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2);
         }
-        .table-container-top {
+        .table-container-bottom {
             position: fixed;
-            top: 20px;
+            bottom: 20px;
             width: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 0 20px;
+            padding: 0; /* Hapus padding */
             box-sizing: border-box;
             z-index: 20;
         }
-        .table-top {
+        .table-bottom {
             background-color: rgba(255, 255, 255, 0.9);
-            border-radius: 15px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-            padding: 10px 20px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            width: 300px;
+            width: 100%; /* Pas dengan layar */
+            height: 60px; /* Persegi panjang, tinggi tetap */
+            border: none; /* Hapus border rounded */
         }
         .button-icon {
             width: 40px;
             height: 40px;
             background-size: cover;
             background-position: center;
-            border-radius: 50%;
+            border-radius: 0; /* Hapus rounded */
             cursor: pointer;
             transition: transform 0.3s ease;
             -webkit-tap-highlight-color: transparent;
             outline: none;
+            margin: 10px; /* Spasi antar ikon */
         }
         .button-icon:hover {
             transform: scale(1.1);
@@ -222,23 +224,19 @@
                 width: 600px;
                 height: 800px;
             }
-            .table-top {
-                width: 600px;
+            .table-bottom {
+                width: 600px; /* Sesuaikan dengan buku di desktop */
+                height: 80px; /* Persegi panjang lebih besar di desktop */
+            }
+            .button-icon {
+                width: 60px;
+                height: 60px; /* Ikon lebih besar di desktop */
+                margin: 10px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="table-container-top">
-        <table class="table-top">
-            <tr>
-                <td><div class="button-icon" style="background-image: url('assets/kembali.webp');" onclick="goBack()"></div></td>
-                <td><div class="button-icon" style="background-image: url('assets/ulangi.webp');" onclick="resetBook()"></div></td>
-                <td><div class="button-icon" style="background-image: url('assets/love.webp');" onclick="showPopup()"></div></td>
-                <td><a href="https://wa.me/+6285792901270" target="_blank" class="button-icon" style="background-image: url('assets/love.webp');"></a></td>
-            </tr>
-        </table>
-    </div>
     <div class="book-container">
         <div class="book" onclick="turnPage()">
             <div class="book-cover"></div>
@@ -262,6 +260,16 @@
             <div class="page page-9"></div>
             <div class="left-page left-page-10"></div>
             <div class="page page-10"></div>
+        </div>
+        <div class="table-container-bottom">
+            <table class="table-bottom">
+                <tr>
+                    <td><div class="button-icon" style="background-image: url('assets/kembali.webp');" onclick="goBack()"></div></td>
+                    <td><div class="button-icon" style="background-image: url('assets/ulangi.webp');" onclick="resetBook()"></div></td>
+                    <td><div class="button-icon" style="background-image: url('assets/love.webp');" onclick="showPopup()"></div></td>
+                    <td><a href="https://wa.me/+6285792901270" target="_blank" class="button-icon" style="background-image: url('assets/love.webp');"></a></td>
+                </tr>
+            </table>
         </div>
         <div class="popup" id="popup">
             <h2>Tentang Buku Ini</h2>
@@ -325,7 +333,7 @@
             setTimeout(() => {
                 book.classList.remove('reset');
                 currentPage = 0;
-            }, 1500); /* Sesuaikan dengan durasi transition */
+            }, 1500);
         }
 
         function showPopup() {
@@ -337,4 +345,4 @@
         }
     </script>
 </body>
-</html>
+    </html>
