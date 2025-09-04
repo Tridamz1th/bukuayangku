@@ -29,8 +29,8 @@
             width: 100%;
         }
         .book {
-            width: 300px; /* Tingkatkan resolusi */
-            height: 400px; /* Tingkatkan resolusi */
+            width: 600px;
+            height: 800px;
             position: relative;
             perspective: 1000px;
             cursor: pointer;
@@ -39,14 +39,14 @@
             -webkit-touch-callout: none;
             outline: none;
         }
-        .book-cover, .page {
+        .book-cover, .page, .left-page {
             width: 100%;
             height: 100%;
             position: absolute;
             top: 0;
             left: 0;
             transform-origin: left;
-            transition: transform 0.7s ease-in-out;
+            transition: transform 0.7s cubic-bezier(0.25, 0.1, 0.25, 1); /* Animasi lebih realistis */
             backface-visibility: hidden;
             pointer-events: auto;
             -webkit-tap-highlight-color: transparent;
@@ -65,6 +65,15 @@
             background-position: center;
             border: 1px solid #ccc;
             box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2);
+            transition: transform 0.7s cubic-bezier(0.25, 0.1, 0.25, 1), box-shadow 0.7s ease; /* Tambah transisi bayangan */
+        }
+        .left-page {
+            background-size: cover;
+            background-position: center;
+            border: 1px solid #ccc;
+            box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.2);
+            z-index: 0; /* Di belakang halaman kanan */
+            transform: rotateY(0deg); /* Selalu terbuka */
         }
         .page-1 { background-image: url('assets/1.webp'); z-index: 10; }
         .page-2 { background-image: url('assets/2.webp'); z-index: 9; }
@@ -76,17 +85,27 @@
         .page-8 { background-image: url('assets/8.webp'); z-index: 3; }
         .page-9 { background-image: url('assets/9.webp'); z-index: 2; }
         .page-10 { background-image: url('assets/10.webp'); z-index: 1; }
+        .left-page-1 { background-image: url('assets/kosong1.webp'); }
+        .left-page-2 { background-image: url('assets/kosong2.webp'); }
+        .left-page-3 { background-image: url('assets/kosong3.webp'); }
+        .left-page-4 { background-image: url('assets/kosong4.webp'); }
+        .left-page-5 { background-image: url('assets/kosong5.webp'); }
+        .left-page-6 { background-image: url('assets/kosong6.webp'); }
+        .left-page-7 { background-image: url('assets/kosong7.webp'); }
+        .left-page-8 { background-image: url('assets/kosong8.webp'); }
+        .left-page-9 { background-image: url('assets/kosong9.webp'); }
+        .left-page-10 { background-image: url('assets/kosong10.webp'); }
         .open .book-cover { transform: rotateY(-180deg); }
-        .flip-1 .page-1 { transform: rotateY(-180deg); }
-        .flip-2 .page-2 { transform: rotateY(-180deg); }
-        .flip-3 .page-3 { transform: rotateY(-180deg); }
-        .flip-4 .page-4 { transform: rotateY(-180deg); }
-        .flip-5 .page-5 { transform: rotateY(-180deg); }
-        .flip-6 .page-6 { transform: rotateY(-180deg); }
-        .flip-7 .page-7 { transform: rotateY(-180deg); }
-        .flip-8 .page-8 { transform: rotateY(-180deg); }
-        .flip-9 .page-9 { transform: rotateY(-180deg); }
-        .flip-10 .page-10 { transform: rotateY(-180deg); }
+        .flip-1 .page-1 { transform: rotateY(-180deg); box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.3); /* Bayangan berubah saat flip */ }
+        .flip-2 .page-2 { transform: rotateY(-180deg); box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.3); }
+        .flip-3 .page-3 { transform: rotateY(-180deg); box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.3); }
+        .flip-4 .page-4 { transform: rotateY(-180deg); box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.3); }
+        .flip-5 .page-5 { transform: rotateY(-180deg); box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.3); }
+        .flip-6 .page-6 { transform: rotateY(-180deg); box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.3); }
+        .flip-7 .page-7 { transform: rotateY(-180deg); box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.3); }
+        .flip-8 .page-8 { transform: rotateY(-180deg); box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.3); }
+        .flip-9 .page-9 { transform: rotateY(-180deg); box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.3); }
+        .flip-10 .page-10 { transform: rotateY(-180deg); box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.3); }
         .reset .book-cover, 
         .reset .page-1, 
         .reset .page-2, 
@@ -99,6 +118,7 @@
         .reset .page-9, 
         .reset .page-10 {
             transform: rotateY(0deg);
+            box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2); /* Kembalikan bayangan default */
         }
         .table-container-top {
             position: fixed;
@@ -119,7 +139,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            width: 600px; /* Sesuaikan dengan lebar buku baru */
+            width: 600px;
         }
         .button-icon {
             width: 40px;
@@ -196,6 +216,27 @@
         .popup td:hover {
             background-color: #ff8a75;
         }
+
+        /* Media Queries untuk Responsif di HP */
+        @media (max-width: 768px) {
+            .book {
+                width: 300px;
+                height: 400px;
+            }
+            .table-top {
+                width: 300px;
+            }
+        }
+
+        @media (max-height: 600px) {
+            .book {
+                width: 200px;
+                height: 266px; /* Proporsi 3:4 tetap */
+            }
+            .table-top {
+                width: 200px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -212,15 +253,25 @@
     <div class="book-container">
         <div class="book" onclick="turnPage()">
             <div class="book-cover"></div>
+            <div class="left-page left-page-1"></div>
             <div class="page page-1"></div>
+            <div class="left-page left-page-2"></div>
             <div class="page page-2"></div>
+            <div class="left-page left-page-3"></div>
             <div class="page page-3"></div>
+            <div class="left-page left-page-4"></div>
             <div class="page page-4"></div>
+            <div class="left-page left-page-5"></div>
             <div class="page page-5"></div>
+            <div class="left-page left-page-6"></div>
             <div class="page page-6"></div>
+            <div class="left-page left-page-7"></div>
             <div class="page page-7"></div>
+            <div class="left-page left-page-8"></div>
             <div class="page page-8"></div>
+            <div class="left-page left-page-9"></div>
             <div class="page page-9"></div>
+            <div class="left-page left-page-10"></div>
             <div class="page page-10"></div>
         </div>
         <div class="popup" id="popup">
@@ -251,14 +302,14 @@
         const popup = document.getElementById('popup');
         const audio = document.getElementById('backgroundMusic');
         let currentPage = 0;
-        let musicPlayed = false; // Flag untuk memastikan musik hanya diputar sekali
+        let musicPlayed = false;
 
         function turnPage() {
             if (currentPage < 11) {
                 currentPage++;
                 if (currentPage === 1 && !musicPlayed) {
-                    audio.play(); // Putar musik hanya saat halaman 1 dan belum diputar
-                    musicPlayed = true; // Set flag menjadi true setelah musik diputar
+                    audio.play();
+                    musicPlayed = true;
                 }
                 if (currentPage === 1) {
                     book.classList.add('open');
@@ -285,8 +336,7 @@
             setTimeout(() => {
                 book.classList.remove('reset');
                 currentPage = 0;
-                // Musik tetap berjalan, tidak di-reset atau diulang
-            }, 700); // Waktu sesuai durasi transisi
+            }, 700);
         }
 
         function showPopup() {
@@ -298,4 +348,4 @@
         }
     </script>
 </body>
-    </html>
+</html>
