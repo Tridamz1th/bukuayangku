@@ -33,7 +33,7 @@
             height: 400px;
             position: relative;
             perspective: 1000px;
-            cursor: pointer;
+            cursor: pointer; /* Pastikan kursor menunjukkan clickable */
             z-index: 10;
         }
         .book-cover, .page {
@@ -45,6 +45,7 @@
             transform-origin: left;
             transition: transform 0.7s ease-in-out;
             backface-visibility: hidden;
+            pointer-events: auto; /* Pastikan semua elemen bisa diklik */
         }
         .book-cover {
             background-image: url('assets/tampilan.png');
@@ -237,6 +238,7 @@
         const book = document.querySelector('.book');
         const popup = document.getElementById('popup');
         const audio = document.getElementById('backgroundMusic');
+        let currentPage = 0;
         let musicPlayed = false; // Flag untuk memastikan musik hanya diputar sekali
 
         function turnPage() {
@@ -282,8 +284,6 @@
         function hidePopup() {
             popup.classList.remove('show');
         }
-
-        // Looping sudah diatur di elemen <audio> dengan atribut 'loop'
     </script>
 </body>
     </html>
