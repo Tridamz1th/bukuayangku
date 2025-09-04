@@ -230,22 +230,24 @@
                 </tr>
             </table>
         </div>
-        <audio id="backgroundMusic" src="assets/music.mp3" preload="auto"></audio>
+        <audio id="backgroundMusic" src="assets/music.mp3" preload="auto" loop></audio>
     </div>
 
     <script>
         const book = document.querySelector('.book');
         const popup = document.getElementById('popup');
         const audio = document.getElementById('backgroundMusic');
-        let currentPage = 0;
+        let musicPlayed = false; // Flag untuk memastikan musik hanya diputar sekali
 
         function turnPage() {
             if (currentPage < 11) {
                 currentPage++;
+                if (currentPage === 1 && !musicPlayed) {
+                    audio.play(); // Putar musik hanya saat halaman 1 dan belum diputar
+                    musicPlayed = true; // Set flag menjadi true setelah musik diputar
+                }
                 if (currentPage === 1) {
                     book.classList.add('open');
-                    audio.currentTime = 0; // Mulai dari awal
-                    audio.play(); // Putar audio
                 } else {
                     book.classList.add(`flip-${currentPage - 1}`);
                 }
@@ -269,8 +271,7 @@
             setTimeout(() => {
                 book.classList.remove('reset');
                 currentPage = 0;
-                audio.currentTime = 0; // Reset audio ke awal saat ulang
-                audio.play(); // Putar ulang audio
+                // Musik tetap berjalan, tidak di-reset atau diulang
             }, 700); // Waktu sesuai durasi transisi
         }
 
@@ -282,11 +283,7 @@
             popup.classList.remove('show');
         }
 
-        // Set looping untuk audio
-        audio.addEventListener('ended', function() {
-            audio.currentTime = 0; // Kembali ke awal
-            audio.play(); // Putar ulang
-        });
+        // Looping sudah diatur di elemen <audio> dengan atribut 'loop'
     </script>
 </body>
-</html>
+    </html>
