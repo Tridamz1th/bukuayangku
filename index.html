@@ -12,7 +12,7 @@
             align-items: center;
             height: 100vh;
             margin: 0;
-            background-image: url('assets/background.png');
+            background-image: url('assets/background.webp');
             background-size: cover;
             background-position: center;
             overflow: hidden;
@@ -35,9 +35,9 @@
             perspective: 1000px;
             cursor: pointer;
             z-index: 10;
-            -webkit-tap-highlight-color: transparent; /* Hilangkan overlay biru di mobile */
-            -webkit-touch-callout: none; /* Hilangkan callout di iOS */
-            outline: none; /* Hilangkan outline fokus */
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+            outline: none;
         }
         .book-cover, .page {
             width: 100%;
@@ -49,11 +49,11 @@
             transition: transform 0.7s ease-in-out;
             backface-visibility: hidden;
             pointer-events: auto;
-            -webkit-tap-highlight-color: transparent; /* Hilangkan overlay biru */
-            outline: none; /* Hilangkan outline fokus */
+            -webkit-tap-highlight-color: transparent;
+            outline: none;
         }
         .book-cover {
-            background-image: url('assets/tampilan.png');
+            background-image: url('assets/tampilan.webp');
             background-size: cover;
             background-position: center;
             border: 2px solid #654321;
@@ -66,16 +66,16 @@
             border: 1px solid #ccc;
             box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2);
         }
-        .page-1 { background-image: url('assets/1.png'); z-index: 10; }
-        .page-2 { background-image: url('assets/2.png'); z-index: 9; }
-        .page-3 { background-image: url('assets/3.png'); z-index: 8; }
-        .page-4 { background-image: url('assets/4.png'); z-index: 7; }
-        .page-5 { background-image: url('assets/5.png'); z-index: 6; }
-        .page-6 { background-image: url('assets/6.png'); z-index: 5; }
-        .page-7 { background-image: url('assets/7.png'); z-index: 4; }
-        .page-8 { background-image: url('assets/8.png'); z-index: 3; }
-        .page-9 { background-image: url('assets/9.png'); z-index: 2; }
-        .page-10 { background-image: url('assets/10.png'); z-index: 1; }
+        .page-1 { background-image: url('assets/1.webp'); z-index: 10; }
+        .page-2 { background-image: url('assets/2.webp'); z-index: 9; }
+        .page-3 { background-image: url('assets/3.webp'); z-index: 8; }
+        .page-4 { background-image: url('assets/4.webp'); z-index: 7; }
+        .page-5 { background-image: url('assets/5.webp'); z-index: 6; }
+        .page-6 { background-image: url('assets/6.webp'); z-index: 5; }
+        .page-7 { background-image: url('assets/7.webp'); z-index: 4; }
+        .page-8 { background-image: url('assets/8.webp'); z-index: 3; }
+        .page-9 { background-image: url('assets/9.webp'); z-index: 2; }
+        .page-10 { background-image: url('assets/10.webp'); z-index: 1; }
         .open .book-cover { transform: rotateY(-180deg); }
         .flip-1 .page-1 { transform: rotateY(-180deg); }
         .flip-2 .page-2 { transform: rotateY(-180deg); }
@@ -129,8 +129,8 @@
             border-radius: 50%;
             cursor: pointer;
             transition: transform 0.3s ease;
-            -webkit-tap-highlight-color: transparent; /* Hilangkan overlay biru */
-            outline: none; /* Hilangkan outline fokus */
+            -webkit-tap-highlight-color: transparent;
+            outline: none;
         }
         .button-icon:hover {
             transform: scale(1.1);
@@ -149,8 +149,8 @@
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
             text-align: center;
             z-index: 100;
-            -webkit-tap-highlight-color: transparent; /* Hilangkan overlay biru */
-            outline: none; /* Hilangkan outline fokus */
+            -webkit-tap-highlight-color: transparent;
+            outline: none;
         }
         .popup.show {
             display: block;
@@ -166,6 +166,7 @@
             border-radius: 50%;
             object-fit: cover;
             margin: 10px 0;
+            background-image: url('assets/photo.webp'); /* Ganti ke .webp */
         }
         .popup h3 {
             font-size: 18px;
@@ -189,8 +190,8 @@
             cursor: pointer;
             transition: background-color 0.3s ease;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            -webkit-tap-highlight-color: transparent; /* Hilangkan overlay biru */
-            outline: none; /* Hilangkan outline fokus */
+            -webkit-tap-highlight-color: transparent;
+            outline: none;
         }
         .popup td:hover {
             background-color: #ff8a75;
@@ -201,10 +202,10 @@
     <div class="table-container-top">
         <table class="table-top">
             <tr>
-                <td><div class="button-icon" style="background-image: url('assets/kembali.png');" onclick="goBack()"></div></td>
-                <td><div class="button-icon" style="background-image: url('assets/ulangi.png');" onclick="resetBook()"></div></td>
-                <td><div class="button-icon" style="background-image: url('assets/love.png');" onclick="showPopup()"></div></td>
-                <td><a href="https://wa.me/+6285792901270" target="_blank" class="button-icon" style="background-image: url('assets/love.png');"></a></td>
+                <td><div class="button-icon" style="background-image: url('assets/kembali.webp');" onclick="goBack()"></div></td>
+                <td><div class="button-icon" style="background-image: url('assets/ulangi.webp');" onclick="resetBook()"></div></td>
+                <td><div class="button-icon" style="background-image: url('assets/love.webp');" onclick="showPopup()"></div></td>
+                <td><a href="https://wa.me/+6285792901270" target="_blank" class="button-icon" style="background-image: url('assets/love.webp');"></a></td>
             </tr>
         </table>
     </div>
@@ -224,7 +225,7 @@
         </div>
         <div class="popup" id="popup">
             <h2>Tentang Buku Ini</h2>
-            <img src="assets/photo.png" alt="Foto">
+            <img src="assets/photo.webp" alt="Foto">
             <h3>Kerja sama</h3>
             <p>GroxAI = Coding HTML</p>
             <p>
@@ -297,4 +298,4 @@
         }
     </script>
 </body>
-</html>
+        </html>
