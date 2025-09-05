@@ -76,7 +76,8 @@
         .page-4 { background-image: url('assets/4.webp'); z-index: 7; }
         .page-5 { background-image: url('assets/5.webp'); z-index: 6; }
         .page-6 { background-image: url('assets/6.webp'); z-index: 5; }
-        .page-7 { background-image: url('assets/7.webp'); z-index: 4; }
+        .page-7 Multiline Code Snippet
+{ background-image: url('assets/7.webp'); z-index: 4; }
         .page-8 { background-image: url('assets/8.webp'); z-index: 3; }
         .page-9 { background-image: url('assets/9.webp'); z-index: 2; }
         .page-10 { background-image: url('assets/10.webp'); z-index: 1; }
@@ -148,7 +149,6 @@
             border-radius: 50%;
             object-fit: cover;
             margin: 10px 0;
-            background-image: url('assets/photo.webp');
         }
         .popup h3 {
             font-size: 18px;
@@ -176,6 +176,27 @@
         }
         .popup-button:hover {
             background-color: #ff8a75;
+        }
+        .image-popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 200;
+            justify-content: center;
+            align-items: center;
+        }
+        .image-popup.show {
+            display: flex;
+        }
+        .image-popup img {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+            cursor: pointer;
         }
         .table-container-bottom {
             position: fixed;
@@ -277,6 +298,12 @@
             </p>
             <div class="popup-button" onclick="hidePopup()">Kembali</div>
         </div>
+        <div class="image-popup" id="imagePopup1" onclick="showSecondPopup()">
+            <img src="assets/info.webp" alt="Info Popup">
+        </div>
+        <div class="image-popup" id="imagePopup2" onclick="hideSecondPopup()">
+            <img src="assets/info2.webp" alt="Info Popup 2">
+        </div>
         <audio id="backgroundMusic" src="assets/music.mp3" preload="auto" loop></audio>
     </div>
     <div class="table-container-bottom">
@@ -295,10 +322,28 @@
     <script>
         const book = document.getElementById('book');
         const popup = document.getElementById('popup');
+        const imagePopup1 = document.getElementById('imagePopup1');
+        const imagePopup2 = document.getElementById('imagePopup2');
         const audio = document.getElementById('backgroundMusic');
         const tabIcons = document.querySelectorAll('.tab-icon');
         let currentPage = 0;
         let musicPlayed = false;
+
+        // Tampilkan pop-up pertama saat halaman dimuat
+        window.onload = function() {
+            imagePopup1.classList.add('show');
+        };
+
+        // Sembunyikan pop-up pertama dan tampilkan pop-up kedua
+        function showSecondPopup() {
+            imagePopup1.classList.remove('show');
+            imagePopup2.classList.add('show');
+        }
+
+        // Sembunyikan pop-up kedua
+        function hideSecondPopup() {
+            imagePopup2.classList.remove('show');
+        }
 
         function turnPage() {
             if (currentPage < 10) { // Halaman ke-10 sebagai halaman terakhir
