@@ -185,17 +185,20 @@
             justify-content: center;
             align-items: center;
             z-index: 20;
+            margin: 0; /* Menghilangkan margin untuk menyentuh batas layar */
+            padding: 0; /* Menghilangkan padding untuk menyentuh batas layar */
         }
         .table-bottom {
             background-color: rgba(255, 255, 255, 0.9);
-            border-radius: 0; /* Persegi panjang tanpa sudut membulat */
+            border-radius: 15px 15px 0 0; /* Rounded hanya di sisi atas kiri dan kanan */
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-            padding: 10px 0; /* Padding hanya atas dan bawah */
+            padding: 15px 0; /* Padding atas dan bawah untuk ruang ikon */
             display: flex;
             align-items: center;
-            justify-content: center;
+            justify-content: space-around; /* Menyesuaikan posisi tab agar merata */
             gap: 20px;
-            width: 200px; /* Lebar tabel tab untuk HP */
+            width: 100%; /* Lebar penuh untuk menyentuh batas layar */
+            height: 80px; /* Tinggi tabel tab diperbesar untuk HP */
         }
         .tab-icon {
             width: 40px;
@@ -235,7 +238,8 @@
                 height: 720px;
             }
             .table-bottom {
-                width: 300px; /* Lebar tabel tab untuk desktop */
+                width: 100%; /* Lebar penuh untuk desktop */
+                height: 100px; /* Tinggi tabel tab diperbesar untuk desktop */
             }
         }
     </style>
@@ -297,7 +301,7 @@
         let musicPlayed = false;
 
         function turnPage() {
-            if (currentPage < 11) {
+            if (currentPage < 10) { // Halaman ke-10 sebagai halaman terakhir
                 currentPage++;
                 if (currentPage === 1 && !musicPlayed) {
                     audio.play();
