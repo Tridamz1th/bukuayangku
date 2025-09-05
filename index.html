@@ -94,31 +94,7 @@
         .left-page-8 { background-image: url('assets/kosong8.webp'); }
         .left-page-9 { background-image: url('assets/kosong9.webp'); }
         .left-page-10 { background-image: url('assets/kosong10.webp'); }
-        .open .book-cover { transform: rotateY(-180deg) scale(0.95); box-shadow: -2px 2px 5px rgba(0, 0, 0, 0.1); }
-        .flip-1 .page-1 { transform: rotateY(-180deg) scale(0.95); box-shadow: -2px 2px 5px rgba(0, 0, 0, 0.1); }
-        .flip-2 .page-2 { transform: rotateY(-180deg) scale(0.95); box-shadow: -2px 2px 5px rgba(0, 0, 0, 0.1); }
-        .flip-3 .page-3 { transform: rotateY(-180deg) scale(0.95); box-shadow: -2px 2px 5px rgba(0, 0, 0, 0.1); }
-        .flip-4 .page-4 { transform: rotateY(-180deg) scale(0.95); box-shadow: -2px 2px 5px rgba(0, 0, 0, 0.1); }
-        .flip-5 .page-5 { transform: rotateY(-180deg) scale(0.95); box-shadow: -2px 2px 5px rgba(0, 0, 0, 0.1); }
-        .flip-6 .page-6 { transform: rotateY(-180deg) scale(0.95); box-shadow: -2px 2px 5px rgba(0, 0, 0, 0.1); }
-        .flip-7 .page-7 { transform: rotateY(-180deg) scale(0.95); box-shadow: -2px 2px 5px rgba(0, 0, 0, 0.1); }
-        .flip-8 .page-8 { transform: rotateY(-180deg) scale(0.95); box-shadow: -2px 2px 5px rgba(0, 0, 0, 0.1); }
-        .flip-9 .page-9 { transform: rotateY(-180deg) scale(0.95); box-shadow: -2px 2px 5px rgba(0, 0, 0, 0.1); }
-        .flip-10 .page-10 { transform: rotateY(-180deg) scale(0.95); box-shadow: -2px 2px 5px rgba(0, 0, 0, 0.1); }
-        .reset .book-cover, 
-        .reset .page-1, 
-        .reset .page-2, 
-        .reset .page-3, 
-        .reset .page-4, 
-        .reset .page-5, 
-        .reset .page-6, 
-        .reset .page-7, 
-        .reset .page-8, 
-        .reset .page-9, 
-        .reset .page-10 {
-            transform: rotateY(0deg);
-            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
-        }
+        /* Hapus state CSS, digantikan JS */
         /* Media Queries untuk Desktop */
         @media (min-width: 769px) {
             .book {
@@ -166,48 +142,69 @@
 
         function handleTouchStart(event) {
             touchStartX = event.touches[0].clientX;
-            if (animationFrameId) cancelAnimationFrame(animationFrameId); // Stop animasi lama
-            event.preventDefault(); // Cegah scroll
+            if (animationFrameId) cancelAnimationFrame(animationFrameId);
+            event.preventDefault();
         }
 
         function handleTouchMove(event) {
             touchMoveX = event.touches[0].clientX;
-            event.preventDefault(); // Cegah scroll
+            event.preventDefault();
         }
 
         function handleTouchEnd(event) {
             const deltaX = touchMoveX - touchStartX;
             const threshold = 50;
+            console.log("DeltaX:", deltaX); // Debug
 
             if (deltaX > threshold && currentPage > 0) {
                 animateFlip(-1); // Geser ke kanan, balik halaman
             } else if (deltaX < -threshold && currentPage < 11) {
                 animateFlip(1); // Geser ke kiri, lanjut halaman
             }
-            event.preventDefault(); // Cegah scroll
+            event.preventDefault();
         }
 
         function animateFlip(direction) {
             let start = null;
-            const duration = 800; // 0.8 detik
+            const duration = 800;
             const startTime = performance.now();
+            const currentElement = direction > 0 
+                ? (currentPage === 0 ? book.querySelector('.book-cover') : book.querySelector(`.page-${currentPage + 1}`))
+                : (currentPage === 1 ? book.querySelector('.book-cover') : book.querySelector(`.page-${currentPage}`));
+
+            if (!currentElement) {
+                console.log("Elemen tidak ditemukan untuk animasi!");
+                return;
+            }
 
             function step(timestamp) {
                 if (!start) start = timestamp;
                 const progress = Math.min((timestamp - start) / duration, 1);
                 const ease = easeInOutQuad(progress);
+                const angle = direction > 0 ? -180 * ease : -180 * (1 - ease);
 
-                if (direction > 0) turnPageWithProgress(ease);
-                else if (direction < 0) goBackWithProgress(ease);
+                currentElement.style.transform = `rotateY(${angle}deg) scale(0.95)`;
+                if (progress === 1) {
+                    if (direction > 0) {
+                        if (currentPage === 0) book.classList.add('open');
+                        else if (currentPage <= 10) book.classList.add(`flip-${currentPage}`);
+                        currentPage++;
+                    } else {
+                        if (currentPage === 1) book.classList.remove('open');
+                        else if (currentPage > 1) book.classList.remove(`flip-${currentPage - 1}`);
+                        currentPage--;
+                    }
+                    if (currentPage === 1 && !musicPlayed && direction > 0) {
+                        audio.play().catch(e => console.log("Autoplay diblok:", e));
+                        musicPlayed = true;
+                    }
+                }
 
                 if (progress < 1) {
                     animationFrameId = requestAnimationFrame(step);
                 } else {
-                    animationFrameId = null; // Reset animasi
-                    if (direction > 0 && currentPage === 1 && !musicPlayed) {
-                        audio.play();
-                        musicPlayed = true;
-                    }
+                    animationFrameId = null;
+                    currentElement.style.transform = direction > 0 ? 'rotateY(-180deg) scale(0.95)' : 'rotateY(0deg) scale(1)';
                 }
             }
             animationFrameId = requestAnimationFrame(step);
@@ -217,35 +214,17 @@
             return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
         }
 
-        function turnPageWithProgress(progress) {
-            const angle = -180 * progress;
-            if (currentPage === 0) {
-                book.classList.add('open');
-                book.querySelector('.book-cover').style.transform = `rotateY(${angle}deg) scale(0.95)`;
-            } else if (currentPage <= 10) {
-                book.classList.add(`flip-${currentPage}`);
-                const page = book.querySelector(`.page-${currentPage + 1}`);
-                if (page) page.style.transform = `rotateY(${angle}deg) scale(0.95)`;
-            }
-            currentPage++;
-        }
-
-        function goBackWithProgress(progress) {
-            const angle = -180 * (1 - progress);
-            if (currentPage === 1) {
-                book.classList.remove('open');
-                book.querySelector('.book-cover').style.transform = `rotateY(${angle}deg) scale(0.95)`;
-            } else if (currentPage > 1) {
-                book.classList.remove(`flip-${currentPage - 1}`);
-                const page = book.querySelector(`.page-${currentPage}`);
-                if (page) page.style.transform = `rotateY(${angle}deg) scale(0.95)`;
-            }
-            currentPage--;
-        }
-
         book.addEventListener('touchstart', handleTouchStart, { passive: false });
         book.addEventListener('touchmove', handleTouchMove, { passive: false });
         book.addEventListener('touchend', handleTouchEnd, { passive: false });
+
+        // Cek audio saat load
+        window.addEventListener('touchstart', () => {
+            if (!musicPlayed) {
+                audio.play().catch(e => console.log("Autoplay gagal:", e));
+                musicPlayed = true;
+            }
+        });
     </script>
     <audio id="backgroundMusic" src="assets/music.mp3" preload="auto" loop></audio>
 </body>
