@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Buku Sederhana</title>
+    <title>Buku Interaktif</title>
     <link href="https://fonts.cdnfonts.com/css/sf-pro-display" rel="stylesheet">
     <style>
         body {
@@ -18,61 +18,57 @@
             overflow: hidden;
             font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
             position: relative;
-            flex-direction: column;
         }
         .book-container {
             position: relative;
             display: flex;
             justify-content: center;
             align-items: center;
+            flex-direction: column;
             height: 100%;
             width: 100%;
+            transform: translateY(-50px); /* Menggeser buku ke atas sebesar 50px */
         }
         .book {
-            width: 270px; /* 9:16 ratio, scalable */
+            width: 270px; /* Rasio 9:16, 270px x 480px untuk HP */
             height: 480px;
             position: relative;
-            perspective: 1200px;
+            perspective: 1000px;
             cursor: pointer;
             z-index: 10;
             -webkit-tap-highlight-color: transparent;
             -webkit-touch-callout: none;
             outline: none;
-            touch-action: pan-x;
+            display: block; /* Default untuk tab buku */
         }
-        .book-cover, .page, .left-page {
+        .book-cover, .page {
             width: 100%;
             height: 100%;
             position: absolute;
             top: 0;
             left: 0;
             transform-origin: left;
-            transform-style: preserve-3d;
+            transition: transform 0.7s ease-in-out;
             backface-visibility: hidden;
             pointer-events: auto;
             -webkit-tap-highlight-color: transparent;
             outline: none;
             image-rendering: crisp-edges;
-            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+            border-radius: 0 15px 15px 0; /* Hanya sisi kanan atas dan bawah yang rounded */
         }
         .book-cover {
             background-image: url('assets/tampilan.webp');
             background-size: cover;
             background-position: center;
             border: 2px solid #654321;
+            box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3);
             z-index: 11;
         }
         .page {
             background-size: cover;
             background-position: center;
             border: 1px solid #ccc;
-        }
-        .left-page {
-            background-size: cover;
-            background-position: center;
-            border: 1px solid #ccc;
-            z-index: 0;
-            transform: rotateY(0deg);
+            box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2);
         }
         .page-1 { background-image: url('assets/1.webp'); z-index: 10; }
         .page-2 { background-image: url('assets/2.webp'); z-index: 9; }
@@ -84,148 +80,277 @@
         .page-8 { background-image: url('assets/8.webp'); z-index: 3; }
         .page-9 { background-image: url('assets/9.webp'); z-index: 2; }
         .page-10 { background-image: url('assets/10.webp'); z-index: 1; }
-        .left-page-1 { background-image: url('assets/kosong1.webp'); }
-        .left-page-2 { background-image: url('assets/kosong2.webp'); }
-        .left-page-3 { background-image: url('assets/kosong3.webp'); }
-        .left-page-4 { background-image: url('assets/kosong4.webp'); }
-        .left-page-5 { background-image: url('assets/kosong5.webp'); }
-        .left-page-6 { background-image: url('assets/kosong6.webp'); }
-        .left-page-7 { background-image: url('assets/kosong7.webp'); }
-        .left-page-8 { background-image: url('assets/kosong8.webp'); }
-        .left-page-9 { background-image: url('assets/kosong9.webp'); }
-        .left-page-10 { background-image: url('assets/kosong10.webp'); }
-        /* Hapus state CSS, digantikan JS */
+        .open .book-cover { transform: rotateY(-180deg); }
+        .flip-1 .page-1 { transform: rotateY(-180deg); }
+        .flip-2 .page-2 { transform: rotateY(-180deg); }
+        .flip-3 .page-3 { transform: rotateY(-180deg); }
+        .flip-4 .page-4 { transform: rotateY(-180deg); }
+        .flip-5 .page-5 { transform: rotateY(-180deg); }
+        .flip-6 .page-6 { transform: rotateY(-180deg); }
+        .flip-7 .page-7 { transform: rotateY(-180deg); }
+        .flip-8 .page-8 { transform: rotateY(-180deg); }
+        .flip-9 .page-9 { transform: rotateY(-180deg); }
+        .flip-10 .page-10 { transform: rotateY(-180deg); }
+        .reset .book-cover, 
+        .reset .page-1, 
+        .reset .page-2, 
+        .reset .page-3, 
+        .reset .page-4, 
+        .reset .page-5, 
+        .reset .page-6, 
+        .reset .page-7, 
+        .reset .page-8, 
+        .reset .page-9, 
+        .reset .page-10 {
+            transform: rotateY(0deg);
+        }
+        .left-half, .right-half {
+            position: absolute;
+            top: 0;
+            height: 100%;
+            width: 50%;
+            z-index: 12;
+        }
+        .left-half {
+            left: 0;
+        }
+        .right-half {
+            right: 0;
+        }
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 350px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            z-index: 100;
+            -webkit-tap-highlight-color: transparent;
+            outline: none;
+        }
+        .popup.show {
+            display: block;
+        }
+        .popup h2 {
+            font-size: 24px;
+            margin: 0 0 15px;
+            color: #333;
+        }
+        .popup img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 10px 0;
+            background-image: url('assets/photo.webp');
+        }
+        .popup h3 {
+            font-size: 18px;
+            margin: 10px 0;
+            color: #333;
+        }
+        .popup p {
+            font-size: 14px;
+            color: #555;
+            margin: 10px 0;
+        }
+        .popup-button {
+            padding: 10px 20px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #ff6f61;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            -webkit-tap-highlight-color: transparent;
+            outline: none;
+            display: inline-block;
+            margin: 20px auto;
+        }
+        .popup-button:hover {
+            background-color: #ff8a75;
+        }
+        .table-container-bottom {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 20;
+        }
+        .table-bottom {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 0; /* Persegi panjang tanpa sudut membulat */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            padding: 10px 0; /* Padding hanya atas dan bawah */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            width: 200px; /* Lebar tabel tab untuk HP */
+        }
+        .tab-icon {
+            width: 40px;
+            height: 40px;
+            background-size: cover;
+            background-position: center;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            position: relative;
+            -webkit-tap-highlight-color: transparent;
+            outline: none;
+        }
+        .tab-icon:hover {
+            transform: scale(1.1);
+        }
+        .tab-icon.active::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 6px; /* Indikator diperkecil */
+            height: 6px;
+            border-radius: 50%;
+            background-color: blue;
+            animation: colorChange 2s infinite ease-in-out;
+        }
+        @keyframes colorChange {
+            0% { background-color: blue; opacity: 1; }
+            50% { background-color: pink; opacity: 0.5; }
+            100% { background-color: blue; opacity: 1; }
+        }
         /* Media Queries untuk Desktop */
         @media (min-width: 769px) {
             .book {
-                width: 540px; /* 9:16 scaled up */
-                height: 960px;
+                width: 405px; /* Rasio 9:16, 405px x 720px untuk desktop */
+                height: 720px;
+            }
+            .table-bottom {
+                width: 300px; /* Lebar tabel tab untuk desktop */
             }
         }
     </style>
 </head>
 <body>
     <div class="book-container">
-        <div class="book" ontouchstart="handleTouchStart(event)" ontouchmove="handleTouchMove(event)" ontouchend="handleTouchEnd(event)">
+        <div class="book" id="book">
+            <div class="left-half" onclick="goBack()"></div>
+            <div class="right-half" onclick="turnPage()"></div>
             <div class="book-cover"></div>
-            <div class="left-page left-page-1"></div>
             <div class="page page-1"></div>
-            <div class="left-page left-page-2"></div>
             <div class="page page-2"></div>
-            <div class="left-page left-page-3"></div>
             <div class="page page-3"></div>
-            <div class="left-page left-page-4"></div>
             <div class="page page-4"></div>
-            <div class="left-page left-page-5"></div>
             <div class="page page-5"></div>
-            <div class="left-page left-page-6"></div>
             <div class="page page-6"></div>
-            <div class="left-page left-page-7"></div>
             <div class="page page-7"></div>
-            <div class="left-page left-page-8"></div>
             <div class="page page-8"></div>
-            <div class="left-page left-page-9"></div>
             <div class="page page-9"></div>
-            <div class="left-page left-page-10"></div>
             <div class="page page-10"></div>
         </div>
+        <div class="popup" id="popup">
+            <h2>Tentang Buku Ini</h2>
+            <img src="assets/photo.webp" alt="Foto">
+            <h3>Kerja sama</h3>
+            <p>GroxAI = Coding HTML</p>
+            <p>
+                Buku ini adalah karya cinta yang dibuat dengan penuh kasih sayang untuk seseorang yang sangat spesial di hati. 
+                Setiap halaman adalah cerita, kenangan, dan harapan yang dirangkai dengan hati, 
+                seperti bunga yang mekar di musim semi, penuh warna dan kehidupan. 
+                Buku ini bukan hanya sekumpulan gambar, tapi cerminan perjalanan kita bersama, 
+                penuh tawa, tangis, dan momen-momen kecil yang membuat hidup begitu berarti. 
+                Untukmu, yang selalu menjadi alasan di balik senyumku, 
+                semoga buku ini bisa menghangatkan hatimu seperti kamu menghangatkan hatimu setiap hari. Asek asek hahaaa!
+            </p>
+            <div class="popup-button" onclick="hidePopup()">Kembali</div>
+        </div>
+        <audio id="backgroundMusic" src="assets/music.mp3" preload="auto" loop></audio>
+    </div>
+    <div class="table-container-bottom">
+        <table class="table-bottom">
+            <tr>
+                <td>
+                    <div class="tab-icon active" style="background-image: url('assets/book-icon.webp');" onclick="showBook()"></div>
+                </td>
+                <td>
+                    <div class="tab-icon" style="background-image: url('assets/feature-icon.webp');" onclick="showPopup()"></div>
+                </td>
+            </tr>
+        </table>
     </div>
 
     <script>
-        const book = document.querySelector('.book');
+        const book = document.getElementById('book');
+        const popup = document.getElementById('popup');
         const audio = document.getElementById('backgroundMusic');
+        const tabIcons = document.querySelectorAll('.tab-icon');
         let currentPage = 0;
         let musicPlayed = false;
-        let touchStartX = 0;
-        let touchMoveX = 0;
-        let animationFrameId = null;
 
-        function handleTouchStart(event) {
-            touchStartX = event.touches[0].clientX;
-            if (animationFrameId) cancelAnimationFrame(animationFrameId);
-            event.preventDefault();
-        }
-
-        function handleTouchMove(event) {
-            touchMoveX = event.touches[0].clientX;
-            event.preventDefault();
-        }
-
-        function handleTouchEnd(event) {
-            const deltaX = touchMoveX - touchStartX;
-            const threshold = 50;
-            console.log("DeltaX:", deltaX); // Debug
-
-            if (deltaX > threshold && currentPage > 0) {
-                animateFlip(-1); // Geser ke kanan, balik halaman
-            } else if (deltaX < -threshold && currentPage < 11) {
-                animateFlip(1); // Geser ke kiri, lanjut halaman
-            }
-            event.preventDefault();
-        }
-
-        function animateFlip(direction) {
-            let start = null;
-            const duration = 800;
-            const startTime = performance.now();
-            const currentElement = direction > 0 
-                ? (currentPage === 0 ? book.querySelector('.book-cover') : book.querySelector(`.page-${currentPage + 1}`))
-                : (currentPage === 1 ? book.querySelector('.book-cover') : book.querySelector(`.page-${currentPage}`));
-
-            if (!currentElement) {
-                console.log("Elemen tidak ditemukan untuk animasi!");
-                return;
-            }
-
-            function step(timestamp) {
-                if (!start) start = timestamp;
-                const progress = Math.min((timestamp - start) / duration, 1);
-                const ease = easeInOutQuad(progress);
-                const angle = direction > 0 ? -180 * ease : -180 * (1 - ease);
-
-                currentElement.style.transform = `rotateY(${angle}deg) scale(0.95)`;
-                if (progress === 1) {
-                    if (direction > 0) {
-                        if (currentPage === 0) book.classList.add('open');
-                        else if (currentPage <= 10) book.classList.add(`flip-${currentPage}`);
-                        currentPage++;
-                    } else {
-                        if (currentPage === 1) book.classList.remove('open');
-                        else if (currentPage > 1) book.classList.remove(`flip-${currentPage - 1}`);
-                        currentPage--;
-                    }
-                    if (currentPage === 1 && !musicPlayed && direction > 0) {
-                        audio.play().catch(e => console.log("Autoplay diblok:", e));
-                        musicPlayed = true;
-                    }
+        function turnPage() {
+            if (currentPage < 11) {
+                currentPage++;
+                if (currentPage === 1 && !musicPlayed) {
+                    audio.play();
+                    musicPlayed = true;
                 }
-
-                if (progress < 1) {
-                    animationFrameId = requestAnimationFrame(step);
+                if (currentPage === 1) {
+                    book.classList.add('open');
                 } else {
-                    animationFrameId = null;
-                    currentElement.style.transform = direction > 0 ? 'rotateY(-180deg) scale(0.95)' : 'rotateY(0deg) scale(1)';
+                    book.classList.add(`flip-${currentPage - 1}`);
                 }
             }
-            animationFrameId = requestAnimationFrame(step);
         }
 
-        function easeInOutQuad(t) {
-            return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
-        }
-
-        book.addEventListener('touchstart', handleTouchStart, { passive: false });
-        book.addEventListener('touchmove', handleTouchMove, { passive: false });
-        book.addEventListener('touchend', handleTouchEnd, { passive: false });
-
-        // Cek audio saat load
-        window.addEventListener('touchstart', () => {
-            if (!musicPlayed) {
-                audio.play().catch(e => console.log("Autoplay gagal:", e));
-                musicPlayed = true;
+        function goBack() {
+            if (currentPage > 0) {
+                if (currentPage === 1) {
+                    book.classList.remove('open');
+                } else {
+                    book.classList.remove(`flip-${currentPage - 1}`);
+                }
+                currentPage--;
             }
-        });
+        }
+
+        function resetBook() {
+            book.classList.add('reset');
+            book.classList.remove('open', 'flip-1', 'flip-2', 'flip-3', 'flip-4', 'flip-5', 'flip-6', 'flip-7', 'flip-8', 'flip-9', 'flip-10');
+            setTimeout(() => {
+                book.classList.remove('reset');
+                currentPage = 0;
+            }, 700);
+        }
+
+        function showBook() {
+            book.style.display = 'block';
+            popup.classList.remove('show');
+            tabIcons[0].classList.add('active');
+            tabIcons[1].classList.remove('active');
+        }
+
+        function showPopup() {
+            book.style.display = 'none';
+            popup.classList.add('show');
+            tabIcons[0].classList.remove('active');
+            tabIcons[1].classList.add('active');
+        }
+
+        function hidePopup() {
+            popup.classList.remove('show');
+            book.style.display = 'block';
+            tabIcons[0].classList.add('active');
+            tabIcons[1].classList.remove('active');
+        }
     </script>
-    <audio id="backgroundMusic" src="assets/music.mp3" preload="auto" loop></audio>
 </body>
 </html>
