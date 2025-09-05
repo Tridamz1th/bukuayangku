@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Buku Interaktif</title>
+    <title>Buku Sederhana</title>
     <link href="https://fonts.cdnfonts.com/css/sf-pro-display" rel="stylesheet">
     <style>
         body {
@@ -25,13 +25,12 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            flex-direction: column;
             height: 100%;
             width: 100%;
         }
-        .book, .page-content {
-            width: 300px;
-            height: 400px;
+        .book {
+            width: 270px; /* 9:16 ratio, scalable */
+            height: 480px;
             position: relative;
             perspective: 1200px;
             cursor: pointer;
@@ -39,10 +38,7 @@
             -webkit-tap-highlight-color: transparent;
             -webkit-touch-callout: none;
             outline: none;
-            display: none; /* Sembunyikan default, ditampilkan via JS */
-        }
-        .book.active, .page-content.active {
-            display: block;
+            touch-action: pan-x;
         }
         .book-cover, .page, .left-page {
             width: 100%;
@@ -51,32 +47,30 @@
             top: 0;
             left: 0;
             transform-origin: left;
-            transition: transform 1.5s cubic-bezier(0.25, 0.1, 0.25, 1), box-shadow 1.5s ease;
+            transform-style: preserve-3d;
             backface-visibility: hidden;
             pointer-events: auto;
             -webkit-tap-highlight-color: transparent;
             outline: none;
             image-rendering: crisp-edges;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
         }
         .book-cover {
             background-image: url('assets/tampilan.webp');
             background-size: cover;
             background-position: center;
             border: 2px solid #654321;
-            box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3);
             z-index: 11;
         }
         .page {
             background-size: cover;
             background-position: center;
             border: 1px solid #ccc;
-            box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2);
         }
         .left-page {
             background-size: cover;
             background-position: center;
             border: 1px solid #ccc;
-            box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.2);
             z-index: 0;
             transform: rotateY(0deg);
         }
@@ -100,17 +94,17 @@
         .left-page-8 { background-image: url('assets/kosong8.webp'); }
         .left-page-9 { background-image: url('assets/kosong9.webp'); }
         .left-page-10 { background-image: url('assets/kosong10.webp'); }
-        .open .book-cover { transform: rotateY(-180deg); box-shadow: -5px 5px 15px rgba(0, 0, 0, 0.4); }
-        .flip-1 .page-1 { transform: rotateY(-180deg); box-shadow: -5px 5px 15px rgba(0, 0, 0, 0.4); }
-        .flip-2 .page-2 { transform: rotateY(-180deg); box-shadow: -5px 5px 15px rgba(0, 0, 0, 0.4); }
-        .flip-3 .page-3 { transform: rotateY(-180deg); box-shadow: -5px 5px 15px rgba(0, 0, 0, 0.4); }
-        .flip-4 .page-4 { transform: rotateY(-180deg); box-shadow: -5px 5px 15px rgba(0, 0, 0, 0.4); }
-        .flip-5 .page-5 { transform: rotateY(-180deg); box-shadow: -5px 5px 15px rgba(0, 0, 0, 0.4); }
-        .flip-6 .page-6 { transform: rotateY(-180deg); box-shadow: -5px 5px 15px rgba(0, 0, 0, 0.4); }
-        .flip-7 .page-7 { transform: rotateY(-180deg); box-shadow: -5px 5px 15px rgba(0, 0, 0, 0.4); }
-        .flip-8 .page-8 { transform: rotateY(-180deg); box-shadow: -5px 5px 15px rgba(0, 0, 0, 0.4); }
-        .flip-9 .page-9 { transform: rotateY(-180deg); box-shadow: -5px 5px 15px rgba(0, 0, 0, 0.4); }
-        .flip-10 .page-10 { transform: rotateY(-180deg); box-shadow: -5px 5px 15px rgba(0, 0, 0, 0.4); }
+        .open .book-cover { transform: rotateY(-180deg) scale(0.95); box-shadow: -2px 2px 5px rgba(0, 0, 0, 0.1); }
+        .flip-1 .page-1 { transform: rotateY(-180deg) scale(0.95); box-shadow: -2px 2px 5px rgba(0, 0, 0, 0.1); }
+        .flip-2 .page-2 { transform: rotateY(-180deg) scale(0.95); box-shadow: -2px 2px 5px rgba(0, 0, 0, 0.1); }
+        .flip-3 .page-3 { transform: rotateY(-180deg) scale(0.95); box-shadow: -2px 2px 5px rgba(0, 0, 0, 0.1); }
+        .flip-4 .page-4 { transform: rotateY(-180deg) scale(0.95); box-shadow: -2px 2px 5px rgba(0, 0, 0, 0.1); }
+        .flip-5 .page-5 { transform: rotateY(-180deg) scale(0.95); box-shadow: -2px 2px 5px rgba(0, 0, 0, 0.1); }
+        .flip-6 .page-6 { transform: rotateY(-180deg) scale(0.95); box-shadow: -2px 2px 5px rgba(0, 0, 0, 0.1); }
+        .flip-7 .page-7 { transform: rotateY(-180deg) scale(0.95); box-shadow: -2px 2px 5px rgba(0, 0, 0, 0.1); }
+        .flip-8 .page-8 { transform: rotateY(-180deg) scale(0.95); box-shadow: -2px 2px 5px rgba(0, 0, 0, 0.1); }
+        .flip-9 .page-9 { transform: rotateY(-180deg) scale(0.95); box-shadow: -2px 2px 5px rgba(0, 0, 0, 0.1); }
+        .flip-10 .page-10 { transform: rotateY(-180deg) scale(0.95); box-shadow: -2px 2px 5px rgba(0, 0, 0, 0.1); }
         .reset .book-cover, 
         .reset .page-1, 
         .reset .page-2, 
@@ -123,224 +117,20 @@
         .reset .page-9, 
         .reset .page-10 {
             transform: rotateY(0deg);
-            box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2);
-        }
-        .page-content.paid {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 24px;
-            color: #333;
-            text-align: center;
-        }
-        .page-content.profile {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-        .profile-header {
-            text-align: center;
-            font-size: 28px;
-            color: #333;
-            margin-bottom: 20px;
-        }
-        .profile-info {
-            display: flex;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        .profile-photo {
-            width: 100px;
-            height: 100px;
-            background-image: url('assets/photo.webp');
-            background-size: cover;
-            border-radius: 50%;
-            margin-right: 20px;
-        }
-        .profile-text {
-            font-size: 18px;
-            color: #333;
-        }
-        .profile-text small {
-            display: block;
-            font-size: 14px;
-            color: #555;
-        }
-        .sub-tabs {
-            display: flex;
-            justify-content: space-around;
-            width: 100%;
-            height: 40px;
-            background-color: rgba(255, 255, 255, 0.9);
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-        }
-        .sub-tab {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 14px;
-            color: #333;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-        .sub-tab:hover {
-            background-color: rgba(255, 255, 255, 0.7);
-        }
-        .table-container-bottom {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 0;
-            box-sizing: border-box;
-            z-index: 20;
-        }
-        .table-bottom {
-            background-color: rgba(255, 255, 255, 0.9);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-            display: flex;
-            align-items: center;
-            justify-content: space-around;
-            width: 100%;
-            height: 60px;
-            border: none;
-        }
-        .tab-button {
-            width: 60px;
-            height: 60px;
-            background-size: contain;
-            background-position: center;
-            background-repeat: no-repeat;
-            border: none;
-            cursor: pointer;
-            transition: transform 0.3s ease, background-color 0.3s ease;
-            -webkit-tap-highlight-color: transparent;
-            outline: none;
-            position: relative;
-        }
-        .tab-button:hover {
-            transform: scale(1.1);
-            background-color: rgba(255, 255, 255, 0.7);
-        }
-        .indicator {
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 10px;
-            height: 10px;
-            background-color: pink;
-            border-radius: 50%;
-            display: none;
-        }
-        .tab-button.active .indicator {
-            display: block;
-        }
-        .popup {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 300px;
-            padding: 20px;
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-            text-align: center;
-            z-index: 100;
-            -webkit-tap-highlight-color: transparent;
-            outline: none;
-        }
-        .popup.show {
-            display: block;
-        }
-        .popup h2 {
-            font-size: 20px;
-            margin: 0 0 15px;
-            color: #ff69b4;
-        }
-        .popup p {
-            font-size: 14px;
-            color: #555;
-            margin-bottom: 15px;
-        }
-        .input-tab {
-            width: 100%;
-            height: 40px;
-            margin-bottom: 15px;
-            padding: 0 10px;
-            box-sizing: border-box;
-            font-size: 14px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            text-align: center;
-        }
-        .input-tab:focus {
-            outline: none;
-            border-color: #ff69b4;
-        }
-        .send-tab {
-            width: 100%;
-            height: 40px;
-            background-color: #ff69b4;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-        .send-tab:hover {
-            background-color: #ff85c0;
-        }
-        .warning {
-            font-size: 10px;
-            color: #ff69b4;
-            margin-top: 10px;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
         }
         /* Media Queries untuk Desktop */
         @media (min-width: 769px) {
-            .book, .page-content {
-                width: 600px;
-                height: 800px;
-            }
-            .table-bottom {
-                width: 600px;
-                height: 80px;
-            }
-            .tab-button {
-                width: 80px;
-                height: 80px;
-            }
-            .popup {
-                width: 400px;
-            }
-            .popup h2 {
-                font-size: 24px;
-            }
-            .popup p {
-                font-size: 16px;
-            }
-            .input-tab, .send-tab {
-                height: 50px;
-                font-size: 16px;
-            }
-            .warning {
-                font-size: 12px;
+            .book {
+                width: 540px; /* 9:16 scaled up */
+                height: 960px;
             }
         }
     </style>
 </head>
 <body>
     <div class="book-container">
-        <div class="book" onclick="handleClick(event)">
+        <div class="book" ontouchstart="handleTouchStart(event)" ontouchmove="handleTouchMove(event)" ontouchend="handleTouchEnd(event)">
             <div class="book-cover"></div>
             <div class="left-page left-page-1"></div>
             <div class="page page-1"></div>
@@ -363,129 +153,95 @@
             <div class="left-page left-page-10"></div>
             <div class="page page-10"></div>
         </div>
-        <div class="page-content paid">
-            <p>Website ini sudah di bayar</p>
-        </div>
-        <div class="page-content profile">
-            <div class="profile-header">Profil</div>
-            <div class="profile-info">
-                <div class="profile-photo"></div>
-                <div class="profile-text">
-                    Nama<br><small>Di buat dengan cinta❤️</small>
-                </div>
-            </div>
-            <div class="sub-tabs">
-                <div class="sub-tab" onclick="showThanksPopup()">Ucapkan Terimakasih</div>
-                <div class="sub-tab">Ucapkan Terimakasih</div>
-                <div class="sub-tab">Website Official daxd</div>
-            </div>
-        </div>
-        <div class="table-container-bottom">
-            <table class="table-bottom">
-                <tr>
-                    <td><div class="tab-button" style="background-image: url('https://img.icons8.com/ios-filled/50/000000/book.png');" onclick="switchTab(0)"></div><div class="indicator"></div></td>
-                    <td><div class="tab-button" style="background-image: url('https://img.icons8.com/ios-filled/50/000000/dollar.png');" onclick="switchTab(1)"></div><div class="indicator"></div></td>
-                    <td><div class="tab-button" style="background-image: url('https://img.icons8.com/ios-filled/50/000000/user.png');" onclick="switchTab(2)"></div><div class="indicator"></div></td>
-                </tr>
-            </table>
-        </div>
-        <div class="popup" id="thanksPopup">
-            <h2>❤️ Ucapkan Tanda Terimakasih ❤️</h2>
-            <p>Masukan nomer pasangan / yang di tuju, untuk mengucapkan tanda terimakasih telah membeli website ini untuk kamu❤️</p>
-            <input type="text" class="input-tab" id="phoneInput" placeholder="Masukan nomer disini" onfocus="this.placeholder=''" onblur="if(!this.value) this.placeholder='Masukan nomer disini'">
-            <button class="send-tab" onclick="sendThanks()">Kirim</button>
-            <div class="warning">Nomer yang anda masukan tidak akan di publikasikan. hanya anda dan pasangan yang mengetahui.</div>
-        </div>
-        <audio id="backgroundMusic" src="assets/music.mp3" preload="auto" loop></audio>
     </div>
 
     <script>
         const book = document.querySelector('.book');
-        const paidPage = document.querySelector('.page-content.paid');
-        const profilePage = document.querySelector('.page-content.profile');
-        const popup = document.getElementById('thanksPopup');
         const audio = document.getElementById('backgroundMusic');
         let currentPage = 0;
         let musicPlayed = false;
-        let activeTab = 0;
+        let touchStartX = 0;
+        let touchMoveX = 0;
+        let animationFrameId = null;
 
-        function handleClick(event) {
-            event.preventDefault();
-            if (event.button === 2) { // Klik kanan
-                turnPage();
-            } else if (event.button === 0) { // Klik kiri
-                goBack();
+        function handleTouchStart(event) {
+            touchStartX = event.touches[0].clientX;
+            if (animationFrameId) cancelAnimationFrame(animationFrameId); // Stop animasi lama
+        }
+
+        function handleTouchMove(event) {
+            touchMoveX = event.touches[0].clientX;
+        }
+
+        function handleTouchEnd(event) {
+            const deltaX = touchMoveX - touchStartX;
+            const threshold = 50;
+
+            if (deltaX > threshold && currentPage > 0) {
+                animateFlip(-1); // Geser ke kanan, balik halaman
+            } else if (deltaX < -threshold && currentPage < 11) {
+                animateFlip(1); // Geser ke kiri, lanjut halaman
             }
         }
 
-        function turnPage() {
-            if (currentPage < 11 && activeTab === 0) {
-                currentPage++;
-                if (currentPage === 1 && !musicPlayed) {
-                    audio.play();
-                    musicPlayed = true;
-                }
-                if (currentPage === 1) {
-                    book.classList.add('open');
+        function animateFlip(direction) {
+            let start = null;
+            const duration = 800; // 0.8 detik
+            const startTime = performance.now();
+
+            function step(timestamp) {
+                if (!start) start = timestamp;
+                const progress = Math.min((timestamp - start) / duration, 1);
+                const ease = easeInOutQuad(progress);
+
+                if (direction > 0) turnPageWithProgress(ease);
+                else if (direction < 0) goBackWithProgress(ease);
+
+                if (progress < 1) {
+                    animationFrameId = requestAnimationFrame(step);
                 } else {
-                    book.classList.add(`flip-${currentPage - 1}`);
+                    animationFrameId = null; // Reset animasi
+                    if (direction > 0 && currentPage === 1 && !musicPlayed) {
+                        audio.play();
+                        musicPlayed = true;
+                    }
                 }
             }
+            animationFrameId = requestAnimationFrame(step);
         }
 
-        function goBack() {
-            if (currentPage > 0 && activeTab === 0) {
-                if (currentPage === 1) {
-                    book.classList.remove('open');
-                } else {
-                    book.classList.remove(`flip-${currentPage - 1}`);
-                }
-                currentPage--;
+        function easeInOutQuad(t) {
+            return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+        }
+
+        function turnPageWithProgress(progress) {
+            const angle = -180 * progress;
+            if (currentPage === 0) {
+                book.classList.add('open');
+                book.querySelector('.book-cover').style.transform = `rotateY(${angle}deg) scale(0.95)`;
+            } else if (currentPage <= 10) {
+                book.classList.add(`flip-${currentPage}`);
+                book.querySelector(`.page-${currentPage + 1}`).style.transform = `rotateY(${angle}deg) scale(0.95)`;
             }
+            currentPage++;
         }
 
-        function resetBook() {
-            if (activeTab === 0) {
-                book.classList.remove('open', 'flip-1', 'flip-2', 'flip-3', 'flip-4', 'flip-5', 'flip-6', 'flip-7', 'flip-8', 'flip-9', 'flip-10');
-                currentPage = 0;
+        function goBackWithProgress(progress) {
+            const angle = -180 * (1 - progress); // Balik arah animasi
+            if (currentPage === 1) {
+                book.classList.remove('open');
+                book.querySelector('.book-cover').style.transform = `rotateY(${angle}deg) scale(0.95)`;
+            } else if (currentPage > 1) {
+                book.classList.remove(`flip-${currentPage - 1}`);
+                book.querySelector(`.page-${currentPage}`).style.transform = `rotateY(${angle}deg) scale(0.95)`;
             }
+            currentPage--;
         }
 
-        function switchTab(tabIndex) {
-            activeTab = tabIndex;
-            book.classList.remove('active');
-            paidPage.classList.remove('active');
-            profilePage.classList.remove('active');
-            document.querySelectorAll('.tab-button').forEach((btn, index) => {
-                btn.classList.toggle('active', index === tabIndex);
-            });
-            if (tabIndex === 0) book.classList.add('active');
-            else if (tabIndex === 1) paidPage.classList.add('active');
-            else if (tabIndex === 2) profilePage.classList.add('active');
-        }
-
-        function showThanksPopup() {
-            popup.classList.add('show');
-            document.getElementById('phoneInput').value = '';
-        }
-
-        function hidePopup() {
-            popup.classList.remove('show');
-        }
-
-        function sendThanks() {
-            const phone = document.getElementById('phoneInput').value;
-            if (phone) {
-                const url = `https://wa.me/${phone}?text=Terimakasih iya, udah bikinin website ini buat aku🥺❤️`;
-                window.location.href = url;
-            }
-        }
-
-        // Aktifkan klik kanan
-        book.addEventListener('contextmenu', handleClick);
-
-        // Set tab default
-        switchTab(0);
+        book.addEventListener('touchstart', handleTouchStart);
+        book.addEventListener('touchmove', handleTouchMove);
+        book.addEventListener('touchend', handleTouchEnd);
     </script>
+    <audio id="backgroundMusic" src="assets/music.mp3" preload="auto" loop></audio>
 </body>
 </html>
